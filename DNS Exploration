@@ -1,0 +1,178 @@
+# DNS EXPLORATION
+
+  # cd to course folder
+~
+❯ cd ~/python-for-cybersecurity/Part_2/2.2\ DNS\ Exploration/
+
+  # open DNSExploration.py
+
+~/python-for-cybersecurity/Part_2/2.2 DNS Exploration main*
+❯ nano DNSExploration.py 
+
+
+  GNU nano 9.1                                     DNSExploration.py                                                
+import dns
+import dns.resolver
+import socket
+
+def ReverseDNS(ip):
+    try:
+        result = socket.gethostbyaddr(ip)
+        return [result[0]]+result[1]
+    except socket.herror:
+        return None
+
+def DNSRequest(domain):
+    ips = []
+    try:
+        result = dns.resolver.resolve(domain)
+        if result:
+            print(domain)
+            for answer in result:
+                print(answer)
+                print("Domain Names: %s" % ReverseDNS(answer.to_text()))
+    except (dns.resolver.NXDOMAIN, dns.exception.Timeout):
+        return []
+    return ips
+
+def SubdomainSearch(domain, dictionary,nums):
+    successes = []
+    for word in dictionary:
+        subdomain = word+"."+domain
+        DNSRequest(subdomain)
+        if nums:
+            for i in range(0,10):
+                s = word+str(i)+"."+domain
+                DNSRequest(s)
+
+domain = "google.com"
+d = "subdomains.txt"
+dictionary = []
+with open(d,"r") as f:
+    dictionary = f.read().splitlines()
+SubdomainSearch(domain,dictionary,True)
+
+
+  # opening subdomains.txt
+
+~/python-for-cybersecurity/Part_2/2.2 DNS Exploration
+❯ nano subdomains.txt 
+
+
+  GNU nano 9.1                                       subdomains.txt                                                 
+www
+mail
+remote
+blog
+webmail
+server
+ns
+smtp
+pop
+imap
+admin
+secure
+vpn
+dns
+ftp
+test
+portal
+host
+support
+dev
+web
+mx
+email
+cloud
+owa
+admin
+cdn
+api
+exchange
+mysql
+wiki
+cpanel
+
+
+  # running DNSExploration.py
+
+~/python-for-cybersecurity/Part_2/2.2 DNS Exploration
+❯ python DNSExploration.py 
+
+www.google.com
+142.251.152.119
+Domain Names: None
+142.251.151.119
+Domain Names: None
+142.251.155.119
+Domain Names: None
+142.251.153.119
+Domain Names: None
+142.251.157.119
+Domain Names: None
+142.251.150.119
+Domain Names: None
+142.251.154.119
+Domain Names: None
+142.251.156.119
+Domain Names: None
+www4.google.com
+142.251.41.14
+Domain Names: ['dclaxb-au-in-f14.1e100.net', 'lga34s40-in-f14.1e100.net']
+www5.google.com
+142.251.45.4
+Domain Names: ['iad66s01-in-f4.1e100.net', 'dclaxb-ax-in-f4.1e100.net']
+www6.google.com
+142.251.215.164
+Domain Names: ['dclaxb-ay-in-f4.1e100.net']
+www9.google.com
+142.251.32.174
+Domain Names: ['dclaxa-au-in-f14.1e100.net', 'dfw28s30-in-f14.1e100.net']
+mail.google.com
+142.251.34.69
+Domain Names: ['qro02s23-in-f5.1e100.net', 'dclaxb-av-in-f5.1e100.net']
+blog.google.com
+142.251.210.137
+Domain Names: ['dclaxa-as-in-f9.1e100.net']
+ns.google.com
+216.239.32.10
+Domain Names: ['ns1.google.com']
+ns1.google.com
+216.239.32.10
+Domain Names: ['ns1.google.com']
+ns2.google.com
+216.239.34.10
+Domain Names: ['ns2.google.com']
+ns3.google.com
+216.239.36.10
+Domain Names: ['ns3.google.com']
+ns4.google.com
+216.239.38.10
+Domain Names: ['ns4.google.com']
+smtp.google.com
+142.250.141.27
+Domain Names: ['dd-in-f27.1e100.net']
+142.250.141.26
+Domain Names: ['dd-in-f26.1e100.net']
+74.125.137.27
+Domain Names: ['dy-in-f27.1e100.net']
+142.250.101.27
+Domain Names: ['dz-in-f27.1e100.net']
+142.250.101.26
+Domain Names: ['dz-in-f26.1e100.net']
+admin.google.com
+142.251.210.142
+Domain Names: ['dclaxa-as-in-f14.1e100.net']
+vpn.google.com
+64.9.224.69
+Domain Names: ['vpn.google.com']
+64.9.224.68
+Domain Names: ['vpn.google.com']
+64.9.224.70
+Domain Names: ['vpn.google.com']
+dns.google.com
+8.8.4.4
+Domain Names: ['dns.google']
+8.8.8.8
+
+  # DNS Scanner is Successful / End of Lesson
