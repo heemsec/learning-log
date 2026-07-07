@@ -1,0 +1,293 @@
+# INTRODUCTION TO SCAPY
+
+~
+❯ cd ~/python-for-cybersecurity/Part_2/2.1\ Network\ Scanning/
+
+~/python-for-cybersecurity/Part_2/2.1 Network Scanning main*
+❯ python
+Python 3.14.6 (main, Jun 24 2026, 15:45:42) [GCC 16.1.1 20260430] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> from scapy.all import *
+>>> packet = rdpcap('http.cap')
+>>> packet
+<http.cap: TCP:41 UDP:2 ICMP:0 Other:0>
+>>> p = packet[0]
+>>> p.show()
+###[ Ethernet ]###
+  dst       = fe:ff:20:00:01:00
+  src       = 00:00:01:00:00:00
+  type      = IPv4
+###[ IP ]###
+     version   = 4
+     ihl       = 5
+     tos       = 0x0
+     len       = 48
+     id        = 3905
+     flags     = DF
+     frag      = 0
+     ttl       = 128
+     proto     = tcp
+     chksum    = 0x91eb
+     src       = 145.254.160.237
+     dst       = 65.208.228.223
+     \options   \
+###[ TCP ]###
+        sport     = tip2
+        dport     = www_http
+        seq       = 951057939
+        ack       = 0
+        dataofs   = 7
+        reserved  = 0
+        flags     = S
+        window    = 8760
+        chksum    = 0xc30c
+        urgptr    = 0
+        options   = [('MSS', 1460), ('NOP', None), ('NOP', None), ('SAckOK', b'')]
+
+>>> p = packet[3]
+>>> p.show()
+###[ Ethernet ]###
+  dst       = fe:ff:20:00:01:00
+  src       = 00:00:01:00:00:00
+  type      = IPv4
+###[ IP ]###
+     version   = 4
+     ihl       = 5
+     tos       = 0x0
+     len       = 519
+     id        = 3909
+     flags     = DF
+     frag      = 0
+     ttl       = 128
+     proto     = tcp
+     chksum    = 0x9010
+     src       = 145.254.160.237
+     dst       = 65.208.228.223
+     \options   \
+###[ TCP ]###
+        sport     = tip2
+        dport     = www_http
+        seq       = 951057940
+        ack       = 290218380
+        dataofs   = 5
+        reserved  = 0
+        flags     = PA
+        window    = 9660
+        chksum    = 0xa958
+        urgptr    = 0
+        options   = []
+###[ Raw ]###
+           load      = b'GET /download.html HTTP/1.1\r\nHost: www.ethereal.com\r\nUser-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.6) Gecko/20040113\r\nAccept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,image/jpeg,image/gif;q=0.2,*/*;q=0.1\r\nAccept-Language: en-us,en;q=0.5\r\nAccept-Encoding: gzip,deflate\r\nAccept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\r\nKeep-Alive: 300\r\nConnection: keep-alive\r\nReferer: http://www.ethereal.com/development.html\r\n\r\n'
+
+>>> p[TCP].dport = 8080
+>>> p.show()
+###[ Ethernet ]###
+  dst       = fe:ff:20:00:01:00
+  src       = 00:00:01:00:00:00
+  type      = IPv4
+###[ IP ]###
+     version   = 4
+     ihl       = 5
+     tos       = 0x0
+     len       = 519
+     id        = 3909
+     flags     = DF
+     frag      = 0
+     ttl       = 128
+     proto     = tcp
+     chksum    = 0x9010
+     src       = 145.254.160.237
+     dst       = 65.208.228.223
+     \options   \
+###[ TCP ]###
+        sport     = tip2
+        dport     = http_alt
+        seq       = 951057940
+        ack       = 290218380
+        dataofs   = 5
+        reserved  = 0
+        flags     = PA
+        window    = 9660
+        chksum    = 0xa958
+        urgptr    = 0
+        options   = []
+###[ Raw ]###
+           load      = b'GET /download.html HTTP/1.1\r\nHost: www.ethereal.com\r\nUser-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.6) Gecko/20040113\r\nAccept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,image/jpeg,image/gif;q=0.2,*/*;q=0.1\r\nAccept-Language: en-us,en;q=0.5\r\nAccept-Encoding: gzip,deflate\r\nAccept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\r\nKeep-Alive: 300\r\nConnection: keep-alive\r\nReferer: http://www.ethereal.com/development.html\r\n\r\n'
+
+>>> p[TCP].dport = 8045
+>>> p.show()
+###[ Ethernet ]###
+  dst       = fe:ff:20:00:01:00
+  src       = 00:00:01:00:00:00
+  type      = IPv4
+###[ IP ]###
+     version   = 4
+     ihl       = 5
+     tos       = 0x0
+     len       = 519
+     id        = 3909
+     flags     = DF
+     frag      = 0
+     ttl       = 128
+     proto     = tcp
+     chksum    = 0x9010
+     src       = 145.254.160.237
+     dst       = 65.208.228.223
+     \options   \
+###[ TCP ]###
+        sport     = tip2
+        dport     = 8045
+        seq       = 951057940
+        ack       = 290218380
+        dataofs   = 5
+        reserved  = 0
+        flags     = PA
+        window    = 9660
+        chksum    = 0xa958
+        urgptr    = 0
+        options   = []
+###[ Raw ]###
+           load      = b'GET /download.html HTTP/1.1\r\nHost: www.ethereal.com\r\nUser-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.6) Gecko/20040113\r\nAccept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,image/jpeg,image/gif;q=0.2,*/*;q=0.1\r\nAccept-Language: en-us,en;q=0.5\r\nAccept-Encoding: gzip,deflate\r\nAccept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\r\nKeep-Alive: 300\r\nConnection: keep-alive\r\nReferer: http://www.ethereal.com/development.html\r\n\r\n'
+
+>>> p = IP()/TCP()
+>>> p.show
+<bound method Packet.show of <IP  frag=0 proto=tcp |<TCP  |>>>
+>>> p.show()
+###[ IP ]###
+  version   = 4
+  ihl       = None
+  tos       = 0x0
+  len       = None
+  id        = 1
+  flags     = 
+  frag      = 0
+  ttl       = 64
+  proto     = tcp
+  chksum    = None
+  src       = 127.0.0.1
+  dst       = 127.0.0.1
+  \options   \
+###[ TCP ]###
+     sport     = ftp_data
+     dport     = www_http
+     seq       = 0
+     ack       = 0
+     dataofs   = None
+     reserved  = 0
+     flags     = S
+     window    = 8192
+     chksum    = None
+     urgptr    = 0
+     options   = []
+
+>>> p[TCP].dport = 35
+>>> p.show()
+###[ IP ]###
+  version   = 4
+  ihl       = None
+  tos       = 0x0
+  len       = None
+  id        = 1
+  flags     = 
+  frag      = 0
+  ttl       = 64
+  proto     = tcp
+  chksum    = None
+  src       = 127.0.0.1
+  dst       = 127.0.0.1
+  \options   \
+###[ TCP ]###
+     sport     = ftp_data
+     dport     = 35
+     seq       = 0
+     ack       = 0
+     dataofs   = None
+     reserved  = 0
+     flags     = S
+     window    = 8192
+     chksum    = None
+     urgptr    = 0
+     options   = []
+
+>>> p = IP(dst=8.8.8.8)/TCP(dport=53)
+  File "<python-input-16>", line 1
+    p = IP(dst=8.8.8.8)/TCP(dport=53)
+               ^^^^^
+SyntaxError: invalid syntax. Perhaps you forgot a comma?
+>>> p = IP(dst="8.8.8.8")/TCP(dport=53)
+>>> p.show()
+###[ IP ]###
+  version   = 4
+  ihl       = None
+  tos       = 0x0
+  len       = None
+  id        = 1
+  flags     = 
+  frag      = 0
+  ttl       = 64
+  proto     = tcp
+  chksum    = None
+  src       = 192.168.1.183
+  dst       = 8.8.8.8
+  \options   \
+###[ TCP ]###
+     sport     = ftp_data
+     dport     = domain
+     seq       = 0
+     ack       = 0
+     dataofs   = None
+     reserved  = 0
+     flags     = S
+     window    = 8192
+     chksum    = None
+     urgptr    = 0
+     options   = []
+
+>>> p = IP(dst="8.8.8.8")/UDP(dport=53)/DNS()
+>>> p.show()
+###[ IP ]###
+  version   = 4
+  ihl       = None
+  tos       = 0x0
+  len       = None
+  id        = 1
+  flags     = 
+  frag      = 0
+  ttl       = 64
+  proto     = udp
+  chksum    = None
+  src       = 192.168.1.183
+  dst       = 8.8.8.8
+  \options   \
+###[ UDP ]###
+     sport     = domain
+     dport     = domain
+     len       = None
+     chksum    = None
+###[ DNS ]###
+        id        = 0
+        qr        = 0
+        opcode    = QUERY
+        aa        = 0
+        tc        = 0
+        rd        = 1
+        ra        = 0
+        z         = 0
+        ad        = 0
+        cd        = 0
+        rcode     = ok
+        qdcount   = None
+        ancount   = None
+        nscount   = None
+        arcount   = None
+        \qd        \
+         |###[ DNS Question Record ]###
+         |  qname     = b'www.example.com.'
+         |  qtype     = A
+         |  unicastresponse= 0
+         |  qclass    = IN
+        \an        \
+        \ns        \
+        \ar        \
+
+>>> 
